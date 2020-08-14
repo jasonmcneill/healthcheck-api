@@ -1,4 +1,5 @@
 exports.DELETE = (req, res) => {
+  const db = require("../../database");
   const refreshToken = req.body.refreshToken;
   const hash = crypto.createHash("sha256").update(refreshToken).digest("hex");
   const sqlQuery = `

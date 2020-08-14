@@ -1,4 +1,5 @@
 exports.POST = (req, res) => {
+  const db = require("../../database");
   const addDays = (date, days) => {
     const result = new Date(date);
     result.setDate(result.getDate() + days);

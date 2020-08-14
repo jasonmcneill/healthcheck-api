@@ -1,4 +1,5 @@
 exports.POST = (req, res) => {
+  const db = require("../../database");
   const validator = require("email-validator");
   const username = req.body.username;
   const isValidEmail = validator.validate(username);

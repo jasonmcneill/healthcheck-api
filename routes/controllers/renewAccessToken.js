@@ -1,4 +1,5 @@
 exports.POST = (req, res) => {
+  const db = require("../../database");
   const refreshToken = req.body.refreshToken;
   if (!refreshToken)
     return res
