@@ -41,19 +41,6 @@ exports.POST = (req, res) => {
         ? `https://firstprinciples.mobi/lang/${lang}/healthcheck/#/new-password/${token}`
         : `http://localhost:3000/#/new-password/${token}`;
 
-    // Plain text portion must be left-justified
-    const emailPlainText = `
-  This message is for ${fullName}.  We just received your request to reset your password on the Health Check app.  To create a new password, please click on the following Web address:
-  
-  ${resetUrl}
-  
-  Note: you must click on the above Web address within 20 minutes of your request to reset your password.
-  
-  Sincerely,
-  
-  The Cyberministry
-      `.trim();
-
     const emailHTML = `
         <section id="usd21HealthCheckPasswordReset">
           <p>
@@ -61,7 +48,7 @@ exports.POST = (req, res) => {
           </p>
   
           <p>
-            <strong><a href="${resetUrl}">Reset My Password</a></strong>
+            <strong><a href="${resetUrl}" style="text-decoration: underline">Reset My Password</a></strong>
           </p>
   
           <p>
@@ -105,7 +92,6 @@ exports.POST = (req, res) => {
         to: `${fullName} <${email}>`,
         from: "Health Check <jason.mcneill@grindstonewebdev.com>",
         subject: `${emailSubject}`,
-        text: `${emailPlainText}`,
         html: `${emailHTML}`,
       };
       sgMail.send(msg);
