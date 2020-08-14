@@ -16,5 +16,5 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/", routes);
 
 // listen
-const port = process.env.ENVIRONMENT === "development" ? 4000 : 80;
+const port = 4000;
 app.listen(port, () => console.log(`Node Express started on port ${port}`));
