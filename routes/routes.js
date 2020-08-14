@@ -15,4 +15,7 @@ router.post("/login", login.POST);
 const logout = require("./controllers/logout");
 router.delete("/logout", logout.DELETE);
 
+const register1 = require("./controllers/register1");
+router.post("/register1", register1.POST);
+
 module.exports = router;
