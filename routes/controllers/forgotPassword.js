@@ -4,7 +4,7 @@ exports.POST = (req, res) => {
   const username = req.body.username;
   const isValidEmail = validator.validate(username);
   const sql = `
-      SELECT fullName, email
+      SELECT memberid, fullname, email
       FROM members
       WHERE username = ?
       LIMIT 1;
@@ -34,7 +34,8 @@ exports.POST = (req, res) => {
       return res.status(200).send({ msg: "user not found", msgType: "error" });
     }
 
-    const fullName = result[0].fullName;
+    const memberid = result[0].memberid;
+    const fullName = result[0].fullname;
     const email = result[0].email;
     const token = require("crypto").randomBytes(16).toString("hex");
     const resetUrl =
@@ -73,10 +74,17 @@ exports.POST = (req, res) => {
       expireDate.getDate() + (1 / 24 / 60) * 20
     );
 
-    const sql =
-      "INSERT INTO users(passwordResetToken, passwordResetTokenExpiry) VALUES (?, ?);";
+    const sql = `
+      UPDATE
+        members
+      SET
+        passwordResetToken = ?,
+        passwordResetTokenExpiry = ?
+      WHERE
+        memberid = ?
+    ;`;
 
-    db.query(sql, [token, tokenExpiry], (error, result) => {
+    db.query(sql, [token, tokenExpiry, memberid], (error, result) => {
       if (err) {
         return res.status(503).send({
           msg: "unable to store password reset token",
@@ -91,7 +99,7 @@ exports.POST = (req, res) => {
       sgMail.setApiKey(process.env.HEALTH_CHECK_SENDGRID_API_KEY);
       const msg = {
         to: `${fullName} <${email}>`,
-        from: "Health Check <jason.mcneill@grindstonewebdev.com>",
+        from: "Health Check <no-reply-hc@usd21.org>",
         subject: `${emailSubject}`,
         html: `${emailHTML}`,
       };
