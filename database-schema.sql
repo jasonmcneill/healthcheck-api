@@ -31,19 +31,29 @@ CREATE TABLE `members` (
   `lastname` varchar(255) NOT NULL,
   `email` varchar(255) DEFAULT NULL,
   `smsphone` varchar(255) DEFAULT NULL,
-  `username` varchar(255) NOT NULL,
-  `password` text NOT NULL,
+  `username` varchar(255) DEFAULT NULL,
+  `password` text,
   `passwordResetToken` char(32) DEFAULT NULL,
   `passwordResetTokenExpiry` datetime DEFAULT NULL,
-  `mustChangePassword` tinyint(1) unsigned NOT NULL,
+  `mustChangePassword` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `status` enum('active','inactive','disfellowshipped','marked') NOT NULL DEFAULT 'active',
   `createdAt` datetime NOT NULL,
   `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`memberid`),
   UNIQUE KEY `email_UNIQUE` (`email`),
   UNIQUE KEY `smsphone_UNIQUE` (`smsphone`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `members`
+--
+
+LOCK TABLES `members` WRITE;
+/*!40000 ALTER TABLE `members` DISABLE KEYS */;
+INSERT INTO `members` VALUES (1,'Jason McNeill','Jason','McNeill','jason.mcneill@usd21.org','+17143179955',NULL,NULL,NULL,NULL,0,'active','2020-08-18 21:55:00','2020-08-19 04:56:01');
+/*!40000 ALTER TABLE `members` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `members__ministries`
@@ -62,6 +72,15 @@ CREATE TABLE `members__ministries` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `members__ministries`
+--
+
+LOCK TABLES `members__ministries` WRITE;
+/*!40000 ALTER TABLE `members__ministries` DISABLE KEYS */;
+/*!40000 ALTER TABLE `members__ministries` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `members__roles`
 --
 
@@ -74,6 +93,16 @@ CREATE TABLE `members__roles` (
   PRIMARY KEY (`memberid`,`role`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `members__roles`
+--
+
+LOCK TABLES `members__roles` WRITE;
+/*!40000 ALTER TABLE `members__roles` DISABLE KEYS */;
+INSERT INTO `members__roles` VALUES (1,'sysadmin');
+/*!40000 ALTER TABLE `members__roles` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `ministries`
@@ -95,6 +124,15 @@ CREATE TABLE `ministries` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `ministries`
+--
+
+LOCK TABLES `ministries` WRITE;
+/*!40000 ALTER TABLE `ministries` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ministries` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `refreshTokens`
 --
 
@@ -111,6 +149,15 @@ CREATE TABLE `refreshTokens` (
   KEY `userid` (`memberid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `refreshTokens`
+--
+
+LOCK TABLES `refreshTokens` WRITE;
+/*!40000 ALTER TABLE `refreshTokens` DISABLE KEYS */;
+/*!40000 ALTER TABLE `refreshTokens` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -121,4 +168,4 @@ CREATE TABLE `refreshTokens` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-08-13 16:26:43
+-- Dump completed on 2020-08-18 22:01:56
