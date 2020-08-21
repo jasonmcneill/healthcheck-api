@@ -1,6 +1,6 @@
 exports.POST = (req, res) => {
   const db = require("../../database");
-  const email = req.body.username;
+  const email = req.body.email;
   const smsphone = req.body.smsphone;
 
   if (email.length) {
@@ -32,7 +32,7 @@ exports.POST = (req, res) => {
     if (!result.length) {
       return res
         .status(404)
-        .send({ msg: "member not found", msgType: "error" });
+        .send({ msg: "member not found", msgType: "error", result: result });
     }
 
     const fullname = result[0].fullname;
@@ -49,7 +49,7 @@ exports.POST = (req, res) => {
     `;
     db.query(
       sqlAddRegistrationToken,
-      [memberid, registrationToken],
+      [registrationToken, memberid],
       (error, result) => {
         if (error) {
           return res.status(400).send({
@@ -60,8 +60,8 @@ exports.POST = (req, res) => {
         }
         const registrationUrl =
           process.env.ENVIRONMENT === "production"
-            ? `https://firstprinciples.mobi/lang/${lang}/healthcheck/#/register/${token}`
-            : `http://localhost:3000/#/register/${token}`;
+            ? `https://firstprinciples.mobi/lang/${lang}/healthcheck/#/register/${registrationToken}`
+            : `http://localhost:3000/#/register/${registrationToken}`;
 
         const emailSubject = "Complete your registration for Health Check";
 
