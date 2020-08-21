@@ -29,6 +29,7 @@ CREATE TABLE `members` (
   `fullname` varchar(255) NOT NULL,
   `firstname` varchar(255) DEFAULT NULL,
   `lastname` varchar(255) NOT NULL,
+  `lang` char(2) NOT NULL DEFAULT 'en',
   `email` varchar(255) DEFAULT NULL,
   `smsphone` varchar(255) DEFAULT NULL,
   `username` varchar(255) DEFAULT NULL,
@@ -51,7 +52,7 @@ CREATE TABLE `members` (
 
 LOCK TABLES `members` WRITE;
 /*!40000 ALTER TABLE `members` DISABLE KEYS */;
-INSERT INTO `members` VALUES (1,'Jason McNeill','Jason','McNeill','jason.mcneill@usd21.org','+17143179955',NULL,NULL,NULL,NULL,0,'active','2020-08-18 21:55:00','2020-08-19 04:56:01');
+INSERT INTO `members` VALUES (1,'Jason McNeill','Jason','McNeill','en','jason.mcneill@usd21.org','+17143179955',NULL,NULL,NULL,NULL,0,'active','2020-08-18 21:55:00','2020-08-19 04:56:01');
 /*!40000 ALTER TABLE `members` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -168,4 +169,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-08-18 22:01:56
+-- Dump completed on 2020-08-20 17:54:15
