@@ -14,7 +14,7 @@ exports.POST = (req, res) => {
   }
 
   const sqlCheckUserExists = `
-    SELECT m.memberid, m.fullname, m.email, m.smsphone, m.lang, mr.role
+    SELECT m.memberid, m.fullname, m.email, m.smsphone, m.lang, m.registrationToken, mr.role
     FROM members m
     INNER JOIN members__roles mr ON m.memberid = mr.memberid
     WHERE m.email = ?
@@ -34,26 +34,29 @@ exports.POST = (req, res) => {
         .status(404)
         .send({ msg: "member not found", msgType: "error", result: result });
     }
-
     const fullname = result[0].fullname;
     const email = result[0].email;
     const smsphone = result[0].smsphone;
     const lang = result[0].lang;
     const role = result[0].role;
     const memberid = result[0].memberid;
-    const registrationToken = require("crypto").randomBytes(16).toString("hex");
+    let registratonToken = require("crypto").randomBytes(16).toString("hex");
+    const existingRegistrationToken = result[0].registrationToken;
+    if (existingRegistrationToken.length === 32)
+      registratonToken = existingRegistrationToken;
     const sqlAddRegistrationToken = `
-      UPDATE members
-      SET registrationToken = ?
-      WHERE memberid = ?
-    `;
+        UPDATE members
+        SET registrationToken = ?
+        WHERE memberid = ?
+      `;
+
     db.query(
       sqlAddRegistrationToken,
       [registrationToken, memberid],
       (error, result) => {
         if (error) {
           return res.status(400).send({
-            msg: "unable to add registration token",
+            msg: "unable to store registration token",
             msgType: "error",
             error: error,
           });
@@ -66,30 +69,30 @@ exports.POST = (req, res) => {
         const emailSubject = "Complete your registration for Health Check";
 
         const emailBody = `
-          <section id="usd21HealthCheckRegistration">
-            <p>
-              This message is for ${fullname}.  Please complete your registration for the Health Check app by clicking on the link below:
-            </p>
-
-            <p>
-              <strong><a href="${registrationUrl}">Register for Health Check</a></strong>
-            </p>
-
-            <p>
-              Sincerely,
-            </p>
-
-            <p>
-              The Cyberministry
-            </p>
-          </section>
-        `.trim();
+            <section id="usd21HealthCheckRegistration">
+              <p>
+                This message is for ${fullname}.  Please complete your registration for the Health Check app by clicking on the link below:
+              </p>
+  
+              <p>
+                <strong><a href="${registrationUrl}">Register for Health Check</a></strong>
+              </p>
+  
+              <p>
+                Sincerely,
+              </p>
+  
+              <p>
+                The Cyberministry
+              </p>
+            </section>
+          `.trim();
 
         const sgMail = require("@sendgrid/mail");
         sgMail.setApiKey(process.env.HEALTH_CHECK_SENDGRID_API_KEY);
         const msg = {
           to: `${fullname} <${email}>`,
-          from: "Health Check <jason.mcneill@grindstonewebdev.com>",
+          from: "Health Check <no-reply-hc@usd21.org>",
           subject: `${emailSubject}`,
           html: `${emailBody}`,
         };
