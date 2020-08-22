@@ -34,6 +34,7 @@ CREATE TABLE `members` (
   `smsphone` varchar(255) DEFAULT NULL,
   `username` varchar(255) DEFAULT NULL,
   `password` text,
+  `registrationToken` char(32) DEFAULT NULL,
   `passwordResetToken` char(32) DEFAULT NULL,
   `passwordResetTokenExpiry` datetime DEFAULT NULL,
   `mustChangePassword` tinyint(1) unsigned NOT NULL DEFAULT '0',
@@ -52,7 +53,7 @@ CREATE TABLE `members` (
 
 LOCK TABLES `members` WRITE;
 /*!40000 ALTER TABLE `members` DISABLE KEYS */;
-INSERT INTO `members` VALUES (1,'Jason McNeill','Jason','McNeill','en','jason.mcneill@usd21.org','+17143179955',NULL,NULL,NULL,NULL,0,'active','2020-08-18 21:55:00','2020-08-19 04:56:01');
+INSERT INTO `members` VALUES (1,'Jason McNeill','Jason','McNeill','en','jason.mcneill@usd21.org','+17143179955',NULL,NULL,'8d2e20fd26596c6564d5f0cafca3a3ee',NULL,NULL,0,'active','2020-08-18 21:55:00','2020-08-21 05:55:44');
 /*!40000 ALTER TABLE `members` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -79,6 +80,39 @@ CREATE TABLE `members__ministries` (
 LOCK TABLES `members__ministries` WRITE;
 /*!40000 ALTER TABLE `members__ministries` DISABLE KEYS */;
 /*!40000 ALTER TABLE `members__ministries` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `members__pending`
+--
+
+DROP TABLE IF EXISTS `members__pending`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `members__pending` (
+  `pendingmemberid` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `bibletalkmemberid` int(10) unsigned NOT NULL,
+  `fullname` varchar(255) NOT NULL,
+  `firstname` varchar(255) DEFAULT NULL,
+  `lastname` varchar(255) NOT NULL,
+  `lang` char(2) NOT NULL DEFAULT 'en',
+  `email` varchar(255) DEFAULT NULL,
+  `smsphone` varchar(255) DEFAULT NULL,
+  `createdAt` datetime NOT NULL,
+  `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`pendingmemberid`),
+  UNIQUE KEY `email_UNIQUE` (`email`),
+  UNIQUE KEY `smsphone_UNIQUE` (`smsphone`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `members__pending`
+--
+
+LOCK TABLES `members__pending` WRITE;
+/*!40000 ALTER TABLE `members__pending` DISABLE KEYS */;
+/*!40000 ALTER TABLE `members__pending` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -169,4 +203,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-08-20 17:54:15
+-- Dump completed on 2020-08-22 13:45:26
