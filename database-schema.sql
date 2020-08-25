@@ -35,6 +35,7 @@ CREATE TABLE `members` (
   `username` varchar(255) DEFAULT NULL,
   `password` text,
   `registrationToken` char(32) DEFAULT NULL,
+  `registrationSmsCode` char(6) DEFAULT NULL,
   `passwordResetToken` char(32) DEFAULT NULL,
   `passwordResetTokenExpiry` datetime DEFAULT NULL,
   `mustChangePassword` tinyint(1) unsigned NOT NULL DEFAULT '0',
@@ -43,7 +44,9 @@ CREATE TABLE `members` (
   `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`memberid`),
   UNIQUE KEY `email_UNIQUE` (`email`),
-  UNIQUE KEY `smsphone_UNIQUE` (`smsphone`)
+  UNIQUE KEY `smsphone_UNIQUE` (`smsphone`),
+  KEY `registrationToken_UNIQUE` (`registrationToken`),
+  KEY `registrationSmsCode_UNIQUE` (`registrationSmsCode`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -53,7 +56,7 @@ CREATE TABLE `members` (
 
 LOCK TABLES `members` WRITE;
 /*!40000 ALTER TABLE `members` DISABLE KEYS */;
-INSERT INTO `members` VALUES (1,'Jason McNeill','Jason','McNeill','en','jason.mcneill@usd21.org','+17143179955',NULL,NULL,'8d2e20fd26596c6564d5f0cafca3a3ee',NULL,NULL,0,'active','2020-08-18 21:55:00','2020-08-21 05:55:44');
+INSERT INTO `members` VALUES (1,'Jason McNeill','Jason','McNeill','en','jason.mcneill@usd21.org','+12133251382',NULL,NULL,'8d2e20fd26596c6564d5f0cafca3a3ee','11e98f',NULL,NULL,0,'active','2020-08-18 21:55:00','2020-08-22 23:31:28');
 /*!40000 ALTER TABLE `members` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -203,4 +206,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-08-22 13:45:26
+-- Dump completed on 2020-08-24  9:36:37
