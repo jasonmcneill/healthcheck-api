@@ -3,6 +3,12 @@ const router = express.Router();
 const utils = require("./utils");
 const authenticateToken = utils.authenticateToken;
 
+router.post("/countries", (req, res) => {
+    const lang = req.body.lang || "en";
+    const countryData = require(`./controllers/world-countries/data/${lang}/countries.json`);
+    res.status(200).send({lang: lang, countries: countryData});
+});
+
 const helloWorld = require("./controllers/helloWorld");
 router.get("/hello-world", helloWorld.GET);
 
