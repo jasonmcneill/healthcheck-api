@@ -5,6 +5,7 @@ exports.POST = (req, res) => {
   const sendEmail = utils.sendEmail;
   const emailSubmitted = req.body.email;
   const smsphoneSubmitted = req.body.smsphone;
+  const smsphoneCountrySubmitted = req.body.smsPhoneCountry;
 
   if (emailSubmitted.length) {
     const validator = require("email-validator");
@@ -16,17 +17,26 @@ exports.POST = (req, res) => {
     }
   }
 
-  const sqlCheckUserExists = `
+  const sqlCheckUserExistsEmail = `
     SELECT m.memberid, m.fullname, m.email, m.smsphone, m.lang, m.registrationToken, m.registrationSmsCode, mr.role
     FROM members m
     INNER JOIN members__roles mr ON m.memberid = mr.memberid
     WHERE m.email = ?
-    OR m.smsphone = ?
     LIMIT 1;
   `;
+  const sqlCheckUserExistsSms = `
+    SELECT m.memberid, m.fullname, m.email, m.smsphone, m.lang, m.registrationToken, m.registrationSmsCode, mr.role
+    FROM members m
+    INNER JOIN members__roles mr ON m.memberid = mr.memberid
+    WHERE m.smsphone = ?
+    LIMIT 1;
+  `;
+  const sqlCheckUserExists = (emailSubmitted.length) ? sqlCheckUserExistsEmail : sqlCheckUserExistsSms;
+  const sqlParams = (emailSubmitted.length) ? [emailSubmitted] : [smsphoneSubmitted];
+
   db.query(
     sqlCheckUserExists,
-    [emailSubmitted, smsphoneSubmitted],
+    sqlParams,
     (error, result) => {
       if (error) {
         return res.status(400).send({
@@ -82,7 +92,7 @@ exports.POST = (req, res) => {
 
           // SEND REGISTRATION LINK VIA SMS
           if (smsphoneSubmitted.length && smsphoneSubmitted === smsphone) {
-            const smsContent = `Your code to register for Health Check:\n\n${registrationSmsCode.toUpperCase()}`;
+            const smsContent = `${registrationSmsCode.toUpperCase()} is the code for ${fullname} to register for the Health Check app.\n\n`;
             const smsResult = sendSms(smsphoneSubmitted, smsContent);
             return res.status(200).send({
               msg: "registration link sent",
