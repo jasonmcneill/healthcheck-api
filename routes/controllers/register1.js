@@ -91,9 +91,9 @@ exports.POST = (req, res) => {
       const role = result[0].role;
       const memberid = result[0].memberid;
       let registrationToken = require("crypto").randomBytes(16).toString("hex");
-      let registrationSmsCode = utils.smsToken();
-      const existingRegistrationToken = result[0].registrationToken;
-      const existingRegistrationSmsCode = result[0].registrationSmsCode;
+      let registrationSmsCode = utils.smsToken() + "";
+      const existingRegistrationToken = result[0].registrationToken || "";
+      const existingRegistrationSmsCode = result[0].registrationSmsCode || "";
       if (existingRegistrationToken.length === 32)
         registrationToken = existingRegistrationToken;
       if (existingRegistrationSmsCode.length === 6)
