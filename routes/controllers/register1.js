@@ -42,18 +42,7 @@ exports.POST = (req, res) => {
         .status(400)
         .send({ msg: "phone number is invalid for country", msgType: "error", phone: smsphoneSubmitted, country: smsphoneCountrySubmitted });
     }
-    const validSmsTypes = [
-      "FIXED_LINE",
-      "MOBILE",
-      "FIXED_LINE_OR_MOBILE",
-      "VOIP",
-      "PERSONAL_NUMBER",
-      "PAGER",
-      "VOICEMAIL",
-      "UNKNOWN"
-    ];
-    const isValidSmsType = validSmsTypes.includes(phoneValidation.numberType);
-    if(!isValidSmsType) {
+    if(!phoneValidation.isValidSmsType) {
       return res
         .status(400)
         .send({ msg: "type of phone number is invalid for SMS", msgType: "error", type: phoneValidation.numberType });
