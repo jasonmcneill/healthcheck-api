@@ -60,3 +60,55 @@ exports.sendEmail = (recipient, sender, subject, body) => {
     reject(error);
   });
 };
+
+/*
+  METHOD:
+  validatePhone
+
+  EXAMPLE RETURN VALUE:
+  {
+    "isValidForRegion": true,
+    "isPossibleNumber": true,
+    "numberType": "FIXED_LINE_OR_MOBILE",
+    "e164Format": "+12133251382",
+    "nationalFormat": "(213) 325-1382"
+  }
+*/
+exports.validatePhone = (number, countryCode) => {
+  const PNF = require('google-libphonenumber').PhoneNumberFormat;
+  const phoneUtil = require("google-libphonenumber").PhoneNumberUtil.getInstance();
+  const phoneNumber = phoneUtil.parse(number, countryCode);
+  const isValidForRegion = phoneUtil.isValidNumberForRegion(phoneNumber, countryCode);
+  const numberType = phoneUtil.getNumberType(phoneNumber);
+  const e164Format = phoneUtil.format(phoneNumber, PNF.E164) || "";
+  const nationalFormat = phoneUtil.formatInOriginalFormat(phoneNumber, countryCode) || "";
+  const isPossibleNumber = phoneUtil.isPossibleNumber(phoneNumber);
+
+  /* 
+    List of types:  
+      URL:  https://github.com/google/libphonenumber/blob/master/java/libphonenumber/src/com/google/i18n/phonenumbers/PhoneNumberUtil.java
+      Line:  search for "public enum PhoneNumberType"
+  */
+  const types = [
+    "FIXED_LINE",
+    "MOBILE",
+    "FIXED_LINE_OR_MOBILE",
+    "TOLL_FREE",
+    "PREMIUM_RATE",
+    "SHARED_COST",
+    "VOIP",
+    "PERSONAL_NUMBER",
+    "PAGER",
+    "UAN",
+    "VOICEMAIL",
+    "UNKNOWN"
+  ];
+  const returnObject = {
+    isPossibleNumber: isPossibleNumber,
+    isValidForRegion: isValidForRegion,
+    numberType: types[numberType],
+    e164Format: e164Format,
+    nationalFormat: nationalFormat
+  };
+  return returnObject;
+}
