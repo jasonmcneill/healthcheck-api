@@ -89,7 +89,7 @@ exports.validatePhone = (number, countryCode) => {
       URL:  https://github.com/google/libphonenumber/blob/master/java/libphonenumber/src/com/google/i18n/phonenumbers/PhoneNumberUtil.java
       Line:  search for "public enum PhoneNumberType"
   */
-  const types = [
+  const allTypes = [
     "FIXED_LINE",
     "MOBILE",
     "FIXED_LINE_OR_MOBILE",
@@ -103,10 +103,22 @@ exports.validatePhone = (number, countryCode) => {
     "VOICEMAIL",
     "UNKNOWN"
   ];
+  const validSmsTypes = [
+    "FIXED_LINE",
+    "MOBILE",
+    "FIXED_LINE_OR_MOBILE",
+    "VOIP",
+    "PERSONAL_NUMBER",
+    "PAGER",
+    "VOICEMAIL",
+    "UNKNOWN"
+  ];
+  const returnedSmsType = allTypes[numberType];
+  const isValidSmsType = validSmsTypes.includes(returnedSmsType);
   const returnObject = {
     isPossibleNumber: isPossibleNumber,
     isValidForRegion: isValidForRegion,
-    numberType: types[numberType],
+    isValidSmsType: isValidSmsType,
     e164Format: e164Format,
     nationalFormat: nationalFormat
   };
