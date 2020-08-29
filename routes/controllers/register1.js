@@ -3,9 +3,15 @@ exports.POST = (req, res) => {
   const utils = require("../utils");
   const sendSms = utils.sendSms;
   const sendEmail = utils.sendEmail;
-  const emailSubmitted = req.body.email;
-  const smsphoneSubmitted = req.body.smsphone;
-  const smsphoneCountrySubmitted = req.body.smsPhoneCountry;
+  const emailSubmitted = req.body.email.trim().toLowerCase() || "";
+  let smsphoneSubmitted = req.body.smsphone.trim() || "";
+  const smsphoneCountrySubmitted = req.body.smsPhoneCountry || "";
+
+  if ((!emailSubmitted.length) && (!smsphoneSubmitted.length)) {
+    return res
+        .status(400)
+        .send({ msg: "either email or phone number is required", msgType: "error" });
+  }
 
   if (emailSubmitted.length) {
     const validator = require("email-validator");
@@ -15,6 +21,45 @@ exports.POST = (req, res) => {
         .status(400)
         .send({ msg: "invalid email format", msgType: "error" });
     }
+  }
+
+  if (smsphoneSubmitted.length) {
+    const isCountrySelected = (smsphoneCountrySubmitted.length === 2) ? true : false;
+    if(!isCountrySelected) {
+      return res
+        .status(404)
+        .send({ msg: "country of phone number is required", msgType: "error" });
+    }
+
+    const phoneValidation = utils.validatePhone(smsphoneSubmitted, smsphoneCountrySubmitted);
+    if(!phoneValidation.isPossibleNumber) {
+      return res
+        .status(400)
+        .send({ msg: "phone number is invalid", msgType: "error" });
+    }
+    if(!phoneValidation.isValidForRegion) {
+      return res
+        .status(400)
+        .send({ msg: "phone number is invalid for country", msgType: "error", phone: smsphoneSubmitted, country: smsphoneCountrySubmitted });
+    }
+    const validSmsTypes = [
+      "FIXED_LINE",
+      "MOBILE",
+      "FIXED_LINE_OR_MOBILE",
+      "VOIP",
+      "PERSONAL_NUMBER",
+      "PAGER",
+      "VOICEMAIL",
+      "UNKNOWN"
+    ];
+    const isValidSmsType = validSmsTypes.includes(phoneValidation.numberType);
+    if(!isValidSmsType) {
+      return res
+        .status(400)
+        .send({ msg: "type of phone number is invalid for SMS", msgType: "error", type: phoneValidation.numberType });
+    }
+
+    smsphoneSubmitted = phoneValidation.nationalFormat;
   }
 
   const sqlCheckUserExistsEmail = `
