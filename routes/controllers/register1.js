@@ -144,7 +144,7 @@ exports.POST = (req, res) => {
           const smsContent = `${registrationSmsCode.toUpperCase()} is the code for ${fullname} to register for the Health Check app.\n\n`;
           const smsResult = sendSms(smsphoneSubmitted, smsContent);
           return res.status(200).send({
-            msg: "registration link sent",
+            msg: "registration code sent",
             msgType: "success",
             sentTo: smsphoneSubmitted,
           });
