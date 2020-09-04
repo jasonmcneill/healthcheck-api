@@ -117,6 +117,11 @@ exports.POST = (req, res) => {
         WHERE memberid = ?
       `;
 
+    console.log(`
+      registrationToken: ${registrationToken}
+      registrationSmsCode: ${registrationSmsCode}
+      smsphoneSubmitted: ${smsphoneSubmitted}
+    `);
     db.query(
       sqlAddRegistrationToken,
       [registrationToken, registrationSmsCode, memberid],
@@ -126,12 +131,6 @@ exports.POST = (req, res) => {
             msg: "unable to store registration token",
             msgType: "error",
             error: error,
-          });
-        }
-        if (!result.length) {
-          return res.status(404).send({
-            msg: "could not confirm token",
-            msgType: "error",
           });
         }
         const registrationUrl =
