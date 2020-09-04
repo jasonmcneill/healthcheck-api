@@ -1,4 +1,4 @@
-import db from "../../database";
+const db = require("../../database");
 
 exports.POST = (req, res) => {
   const smsPhone = req.body.smsPhone + "" || "";
