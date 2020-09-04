@@ -3,6 +3,7 @@ exports.POST = (req, res) => {
   const utils = require("../utils");
   const sendSms = utils.sendSms;
   const sendEmail = utils.sendEmail;
+  const isLocal = new Boolean(req.body.isLocal) || false;
   const emailSubmitted = req.body.email.trim().toLowerCase() || "";
   let smsphoneSubmitted = req.body.smsphone.trim() || "";
   const smsphoneCountrySubmitted = req.body.smsPhoneCountry || "";
@@ -134,8 +135,13 @@ exports.POST = (req, res) => {
             : `http://localhost:3000/#/register/${registrationToken}`;
 
         // SEND REGISTRATION LINK VIA SMS
+        const domainName = isLocal ? "localhost" : "firstprinciples.mobi";
         if (smsphoneSubmitted.length && smsphoneSubmitted === smsphone) {
-          const smsContent = `${registrationSmsCode.toUpperCase()} is the code for ${fullname} to register for the Health Check app.\n\n`;
+          const smsContent = `
+            ${registrationSmsCode} is the code for ${fullname} to register for the Health Check app.\n\n
+
+            @${domainName} #${registrationSmsCode}
+          `;
           const smsResult = sendSms(smsphoneSubmitted, smsContent);
           return res.status(200).send({
             msg: "registration code sent",
