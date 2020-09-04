@@ -117,11 +117,6 @@ exports.POST = (req, res) => {
         WHERE memberid = ?
       `;
 
-    console.log(`
-      registrationToken: ${registrationToken}
-      registrationSmsCode: ${registrationSmsCode}
-      smsphoneSubmitted: ${smsphoneSubmitted}
-    `);
     db.query(
       sqlAddRegistrationToken,
       [registrationToken, registrationSmsCode, memberid],
