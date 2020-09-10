@@ -137,16 +137,13 @@ exports.POST = (req, res) => {
         // SEND REGISTRATION LINK VIA SMS
         const domainName = isLocal ? "localhost" : "firstprinciples.mobi";
         if (smsphoneSubmitted.length && smsphoneSubmitted === smsphone) {
-          const smsContent = `
-            ${registrationSmsCode} is the code for ${fullname} to register for the Health Check app.\n\n
-
-            @${domainName} #${registrationSmsCode}
-          `;
+          const smsContent = `${registrationSmsCode} is the code for ${fullname} to register for the Health Check app.\n\n@${domainName} #${registrationSmsCode}`;
           const smsResult = sendSms(smsphoneSubmitted, smsContent);
           return res.status(200).send({
             msg: "registration code sent",
             msgType: "success",
             sentTo: smsphoneSubmitted,
+            result: smsResult,
           });
         }
 
